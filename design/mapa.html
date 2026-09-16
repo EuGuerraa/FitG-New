@@ -1,0 +1,569 @@
+<title>Mapa do FitG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Schibsted+Grotesk:wght@400;500;600;700&family=Kode+Mono:wght@400;500&display=swap">
+
+<style>
+/* ===========================================================================
+   FitG — mapa de construção
+   Documento de trabalho na mesma linguagem do produto (direção "Forja"):
+   carvão amarronzado, ouro em brasa, pauta com fio de 1px.
+   ======================================================================== */
+
+:root {
+  --ground:    #14110E;
+  --metal:     #1F1A15;
+  --metal-2:   #292118;
+  --edge:      #3B3125;
+  --edge-soft: #2A2219;
+  --gold:      #E8A33D;
+  --gold-hot:  #F7D79B;
+  --gold-ink:  #1A1008;
+  --ember:     #C4552A;
+  --ink:       #F6F0E6;
+  --ink-2:     #B7A994;
+  --ink-3:     #7F7364;
+  --ink-4:     #5B5246;
+  --done:      #8FB26A;
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --text: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Kode Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-inline: 20px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(70vw 50vw at 8% -12%, rgba(232,163,61,.13), transparent 60%),
+    radial-gradient(60vw 45vw at 98% 104%, rgba(196,85,42,.11), transparent 58%);
+}
+body > * { position: relative; z-index: 1; }
+
+.wrap { max-width: 880px; margin-inline: auto; }
+
+.display { font-family: var(--display); font-weight: 800; letter-spacing: -.025em; font-variation-settings: "opsz" 48; }
+.tag {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+}
+.tag.gold { color: var(--gold); }
+
+/* --------------------------------------------------------------- Abertura */
+
+header.top { padding-block: 70px 36px; }
+header.top h1 {
+  font-family: var(--display); font-weight: 800; font-variation-settings: "opsz" 96;
+  font-size: clamp(46px, 9vw, 86px); line-height: .88; letter-spacing: -.035em;
+  margin: 14px 0 0; text-wrap: balance;
+}
+header.top .lede {
+  max-width: 60ch; margin: 22px 0 0; color: var(--ink-2); font-size: 17.5px;
+}
+
+/* ------------------------------------------------------------------ Placar */
+
+.scoreboard {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px; margin-top: 30px;
+}
+.scoreboard div { border: 1px solid var(--edge-soft); border-radius: 18px; padding: 14px 16px; background: var(--metal); }
+.scoreboard div.hot {
+  border-color: rgba(232,163,61,.35);
+  background: linear-gradient(165deg, rgba(232,163,61,.13), rgba(232,163,61,.03));
+}
+.scoreboard b {
+  display: block; font-family: var(--display); font-weight: 800;
+  font-size: 34px; line-height: 1; margin-top: 4px; font-variant-numeric: tabular-nums;
+}
+.scoreboard div.hot b { color: var(--gold); }
+
+/* ---------------------------------------------------------------- Seções */
+
+section { padding-block: 40px 0; }
+section > h2 {
+  font-family: var(--display); font-weight: 800; font-variation-settings: "opsz" 72;
+  font-size: 34px; line-height: 1; letter-spacing: -.03em;
+  margin: 10px 0 0; padding-top: 22px; border-top: 1px solid var(--edge-soft);
+}
+section > .intro { max-width: 62ch; color: var(--ink-2); margin: 14px 0 0; }
+
+/* --------------------------------------------------------------- Módulos */
+
+.modules { margin-top: 26px; }
+.module {
+  display: grid; grid-template-columns: 54px 1fr;
+  gap: 18px; padding: 20px 0; border-top: 1px solid var(--edge-soft);
+}
+.module:last-child { border-bottom: 1px solid var(--edge-soft); }
+.module .num {
+  font-family: var(--display); font-weight: 800; font-variation-settings: "opsz" 72;
+  font-size: 40px; line-height: .8; color: var(--edge); letter-spacing: -.04em;
+}
+.module.ready .num { color: var(--done); }
+.module.schema .num { color: var(--gold); }
+.module h3 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -.015em; }
+.module .state {
+  display: inline-block; margin-top: 8px; padding: 3px 9px; border-radius: 999px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  border: 1px solid var(--edge); color: var(--ink-3);
+}
+.module.ready .state { border-color: rgba(143,178,106,.45); color: var(--done); }
+.module.schema .state { border-color: rgba(232,163,61,.45); color: var(--gold); }
+.module p { margin: 10px 0 0; color: var(--ink-2); font-size: 15.5px; max-width: 60ch; }
+.module ul { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.module ul li {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+  border: 1px solid var(--edge-soft); border-radius: 7px; padding: 3px 8px;
+}
+
+/* ------------------------------------------------------------ Quem vê o quê */
+
+.matrix { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14.5px; }
+.matrix th, .matrix td { text-align: left; padding: 11px 10px 11px 0; border-bottom: 1px solid var(--edge-soft); vertical-align: top; }
+.matrix th {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+  border-bottom-color: var(--edge);
+}
+.matrix td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.matrix td { color: var(--ink-2); }
+.matrix .no { color: var(--ember); }
+.matrix .yes { color: var(--done); }
+.scroller { overflow-x: auto; }
+
+/* ------------------------------------------------------------------ Regras */
+
+.rules { counter-reset: r; margin-top: 22px; }
+.rule { display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding: 16px 0; border-top: 1px solid var(--edge-soft); }
+.rule:last-child { border-bottom: 1px solid var(--edge-soft); }
+.rule::before {
+  counter-increment: r; content: counter(r);
+  font-family: var(--mono); font-size: 12px; color: var(--gold); padding-top: 3px;
+}
+.rule b { display: block; font-size: 16.5px; letter-spacing: -.01em; }
+.rule span { display: block; margin-top: 5px; color: var(--ink-2); font-size: 15px; }
+
+/* --------------------------------------------------------------- Abertas */
+
+.open { display: grid; gap: 12px; margin-top: 22px; }
+.open div {
+  border: 1px solid var(--edge-soft); border-left: 2px solid var(--ember);
+  border-radius: 0 16px 16px 0; padding: 15px 18px; background: var(--metal);
+}
+.open b { display: block; font-size: 16.5px; letter-spacing: -.01em; }
+.open span { display: block; margin-top: 5px; color: var(--ink-2); font-size: 15px; }
+.open em { font-style: normal; color: var(--ink-4); font-family: var(--mono); font-size: 11.5px; display: block; margin-top: 7px; }
+
+/* ------------------------------------------------------------------ Ordem */
+
+.steps { margin-top: 22px; display: grid; gap: 10px; }
+.steps div {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: baseline;
+  border: 1px solid var(--edge-soft); border-radius: 16px; padding: 14px 16px; background: var(--metal);
+}
+.steps .k { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--gold); line-height: 1; }
+.steps b { font-size: 16.5px; letter-spacing: -.01em; font-weight: 600; }
+.steps p { margin: 4px 0 0; color: var(--ink-2); font-size: 14.5px; }
+.steps .why { font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); text-align: right; white-space: nowrap; }
+
+/* ------------------------------------------------------------------- Você */
+
+.ask {
+  margin-top: 26px; border-radius: 22px; overflow: hidden;
+  background: linear-gradient(152deg, #F6CE83 0%, #E8A33D 32%, #C4552A 74%, #8A3417 100%);
+  color: var(--gold-ink); padding: 24px 26px 26px;
+}
+.ask h2 { font-family: var(--display); font-weight: 800; font-size: 32px; line-height: 1; letter-spacing: -.03em; margin: 0; }
+.ask ol { margin: 16px 0 0; padding-left: 20px; }
+.ask li { margin-top: 9px; font-size: 16px; }
+.ask code {
+  font-family: var(--mono); font-size: 13px; background: rgba(26,16,8,.16);
+  border-radius: 5px; padding: 1px 6px;
+}
+.ask .fine { margin: 16px 0 0; font-size: 14px; color: rgba(26,16,8,.72); }
+
+footer { padding-block: 40px 90px; margin-top: 44px; border-top: 1px solid var(--edge-soft); }
+footer p { color: var(--ink-3); font-size: 14.5px; max-width: 62ch; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+@media (max-width: 520px) {
+  header.top { padding-block: 40px 24px; }
+  .module { grid-template-columns: 40px 1fr; gap: 12px; }
+  .steps div { grid-template-columns: auto 1fr; }
+  .steps .why { grid-column: 2; text-align: left; }
+}
+</style>
+
+<header class="top wrap">
+  <p class="tag gold">FitG · estrutura</p>
+  <h1>O que travar antes,<br>o que deixar solto.</h1>
+  <p class="lede">
+    Mapa da construção. Serve para uma decisão só: separar o que é caro de mudar
+    depois — banco, papéis, autorização, sincronização — do que é barato e pode
+    continuar mudando enquanto a gente constrói.
+  </p>
+
+  <div class="scoreboard">
+    <div><span class="tag">Módulos</span><b>6</b></div>
+    <div><span class="tag">Prontos</span><b>2</b></div>
+    <div class="hot"><span class="tag gold">Schema escrito</span><b>6</b></div>
+    <div><span class="tag">Decisões abertas</span><b>3</b></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ==================================================== O que já travou -->
+  <section>
+    <p class="tag">Camada cara</p>
+    <h2>O que já está travado</h2>
+    <p class="intro">
+      Escrito como migration de verdade e coberto por teste. Mexer nisso a partir
+      de agora custa migração de banco — por isso foi feito antes de qualquer tela.
+    </p>
+
+    <div class="rules">
+      <div class="rule">
+        <div>
+          <b>Um tenant por personal ou estúdio</b>
+          <span>Todo registro carrega <code>tenant_id</code>. É o formato mais fácil de
+            virar "estúdio assina" ou "aluno assina" depois, se o modelo de negócio
+            mudar — o contrário não é verdade.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Quatro papéis: administrador, personal, nutricionista, aluno</b>
+          <span>E uma tabela de vínculos que decide quem enxerga quem. Não é o papel
+            sozinho que autoriza: é o vínculo ativo entre aquele profissional e
+            aquele aluno.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Autorização mora no banco</b>
+          <span>Políticas RLS no Postgres, não no frontend. Mesmo com a chave pública
+            vazada e a consulta montada à mão, o banco recusa. A tela no máximo
+            esconde o que o banco já recusaria.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Prescrição e execução são tabelas separadas</b>
+          <span>O que o profissional manda fazer e o que o aluno fez não se misturam.
+            Cada série registrada congela o alvo daquele momento: editar o plano
+            depois não reescreve o histórico.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Dinheiro em centavos inteiros</b>
+          <span>Nunca fração. Valor quebrado vira bug de arredondamento na primeira
+            divisão, e bug de arredondamento em cobrança é ligação de cliente.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== Os módulos -->
+  <section>
+    <p class="tag">Mapa</p>
+    <h2>Os seis módulos</h2>
+    <p class="intro">
+      O schema dos seis já está escrito. "Pronto" quer dizer que tem tela funcionando;
+      "schema pronto" quer dizer que a migration existe e falta construir por cima.
+    </p>
+
+    <div class="modules">
+      <article class="module ready">
+        <span class="num">01</span>
+        <div>
+          <h3>Fundação</h3>
+          <span class="state">pronto</span>
+          <p>Contas, papéis, vínculos aluno↔profissional, sessão, roteamento por papel,
+            convites. É o alicerce de todo o resto.</p>
+          <ul><li>tenants</li><li>profiles</li><li>assignments</li><li>invites</li></ul>
+        </div>
+      </article>
+
+      <article class="module ready">
+        <span class="num">02</span>
+        <div>
+          <h3>Treino</h3>
+          <span class="state">pronto</span>
+          <p>Catálogo de exercícios, plano com dias A/B/C, prescrição por exercício,
+            execução com registro de série, timer de descanso, esforço percebido e
+            histórico. O personal já monta o plano pela tela.</p>
+          <ul><li>exercises</li><li>workout_plans</li><li>workout_days</li><li>workout_day_exercises</li><li>workout_sessions</li><li>set_logs</li></ul>
+        </div>
+      </article>
+
+      <article class="module schema">
+        <span class="num">03</span>
+        <div>
+          <h3>Nutrição</h3>
+          <span class="state">schema pronto</span>
+          <p>Tabela de alimentos com macros, plano alimentar com metas, refeições do dia
+            com itens e substituições, registro do que o aluno comeu e hidratação.
+            Mesma separação do treino: o nutricionista monta, o aluno registra.</p>
+          <ul><li>foods</li><li>meal_plans</li><li>meals</li><li>meal_items</li><li>meal_logs</li><li>water_logs</li></ul>
+        </div>
+      </article>
+
+      <article class="module schema">
+        <span class="num">04</span>
+        <div>
+          <h3>Avaliação física</h3>
+          <span class="state">schema pronto</span>
+          <p>Peso, medidas e dobras com chave livre — incluir "panturrilha direita" não
+            vira migration. Fotos de progresso em bucket privado, com uma regra de
+            privacidade mais estreita que a do resto do sistema.</p>
+          <ul><li>assessments</li><li>assessment_measures</li><li>progress_photos</li></ul>
+        </div>
+      </article>
+
+      <article class="module schema">
+        <span class="num">05</span>
+        <div>
+          <h3>Cobrança</h3>
+          <span class="state">schema pronto</span>
+          <p>O que o aluno paga ao personal: planos, assinatura com dia de vencimento,
+            faturas e inadimplência. Cartão nunca é guardado aqui — só a referência do
+            provedor externo.</p>
+          <ul><li>billing_plans</li><li>subscriptions</li><li>invoices</li></ul>
+        </div>
+      </article>
+
+      <article class="module schema">
+        <span class="num">06</span>
+        <div>
+          <h3>Offline</h3>
+          <span class="state">schema pronto</span>
+          <p>Registro de treino sem sinal, com fila local e sincronização idempotente.
+            Não é um módulo com tela: é uma decisão que atravessa treino, nutrição e
+            avaliação — e por isso precisava estar no schema desde já.</p>
+          <ul><li>updated_at</li><li>device_id</li><li>índices de sync</li><li>gatilho de sessão única</li></ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ====================================================== Quem vê o quê -->
+  <section>
+    <p class="tag">Autorização</p>
+    <h2>Quem vê o quê</h2>
+    <p class="intro">
+      Esta tabela é a regra escrita em português; no banco ela existe como política RLS.
+      Duas decisões aqui merecem atenção porque não são óbvias.
+    </p>
+
+    <div class="scroller">
+      <table class="matrix">
+        <tr>
+          <th>Dado</th><th>Aluno</th><th>Personal designado</th><th>Nutricionista designado</th><th>Administrador</th>
+        </tr>
+        <tr>
+          <td>Plano de treino</td>
+          <td>lê o seu</td><td class="yes">monta e edita</td><td>lê (contexto)</td><td class="yes">monta e edita</td>
+        </tr>
+        <tr>
+          <td>Treino executado</td>
+          <td class="yes">só ele registra</td><td>lê</td><td>lê</td><td>lê</td>
+        </tr>
+        <tr>
+          <td>Plano alimentar</td>
+          <td>lê o seu</td><td>lê (contexto)</td><td class="yes">monta e edita</td><td class="yes">monta e edita</td>
+        </tr>
+        <tr>
+          <td>Refeição registrada</td>
+          <td class="yes">só ele registra</td><td>lê</td><td>lê</td><td>lê</td>
+        </tr>
+        <tr>
+          <td>Peso e medidas</td>
+          <td>registra o peso</td><td class="yes">avalia</td><td class="yes">avalia</td><td>lê</td>
+        </tr>
+        <tr>
+          <td><b>Fotos de progresso</b></td>
+          <td class="yes">dono</td><td>só se o aluno compartilhar</td><td>só se o aluno compartilhar</td><td class="no">não vê</td>
+        </tr>
+        <tr>
+          <td>Faturas e assinatura</td>
+          <td>as suas</td><td>lê dos seus alunos</td><td class="no">não vê</td><td class="yes">edita tudo</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="open" style="margin-top:24px">
+      <div>
+        <b>Foto de progresso não é dado de gestão</b>
+        <span>É a única linha do sistema em que o administrador do estúdio não tem acesso
+          total. Ser dono da conta não dá direito a ver o corpo de todo mundo, e o padrão
+          é não compartilhar: a equipe designada só enxerga se o aluno marcar.</span>
+        <em>supabase/migrations/0004_avaliacao.sql · photos_select</em>
+      </div>
+      <div>
+        <b>O nutricionista não mexe no treino, e o personal não mexe na dieta</b>
+        <span>Cada um lê o do outro para ter contexto, e escreve só no seu. Não é uma
+          regra de tela: quem tenta escrever fora da sua área é recusado pelo banco.</span>
+        <em>0002_treino.sql · plans_write &nbsp;·&nbsp; 0003_nutricao.sql · can_write_diet</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= Offline -->
+  <section>
+    <p class="tag">Sincronização</p>
+    <h2>Como o offline funciona</h2>
+    <p class="intro">
+      Academia tem sinal ruim, e o registro de série é a escrita mais frequente do
+      produto. Quatro regras resolvem isso sem virar uma máquina de conciliação.
+    </p>
+
+    <div class="rules">
+      <div class="rule">
+        <div>
+          <b>O identificador nasce no telefone</b>
+          <span>Cada linha já vai para a fila com o seu <code>uuid</code> definitivo.
+            Reenviar a mesma escrita duas vezes não duplica nada, porque a chave
+            primária já existe no banco.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Chaves naturais fazem o resto</b>
+          <span>Uma série é única por treino, exercício e número. Uma refeição é única
+            por aluno, refeição e dia. Isso transforma a sincronização em um upsert
+            simples, mesmo se o aparelho tiver a fila embaralhada.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>Conflito resolve pelo carimbo de hora</b>
+          <span>Se dois aparelhos escreverem a mesma série, vence a escrita mais recente.
+            Faz sentido aqui: duas telas registrando o mesmo treino estão corrigindo,
+            não competindo.</span>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <b>A tela nunca espera a rede</b>
+          <span>Marcar a série é local e instantâneo; a subida acontece por trás. Se o
+            sinal cair no meio, a fila segura e reenvia — o aluno não vê erro nem
+            perde o treino.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= Ainda abertas -->
+  <section>
+    <p class="tag">Pendências</p>
+    <h2>O que ainda não decidimos</h2>
+    <p class="intro">
+      Três decisões seguem abertas de propósito. Nenhuma trava a construção agora, mas
+      cada uma tem um momento em que precisa ser respondida.
+    </p>
+
+    <div class="open">
+      <div>
+        <b>Quem paga pelo FitG</b>
+        <span>Personal assina, estúdio assina, ou o aluno paga direto. Seguimos com um
+          tenant por personal, que é o mais fácil de converter nos outros dois.</span>
+        <em>trava antes de: cobrança da plataforma e limites de conta</em>
+      </div>
+      <div>
+        <b>Como o aluno entra na conta</b>
+        <span>Convite por link, por e-mail, ou o personal cadastra e entrega a senha.
+          A tabela de convites já existe, o fluxo não.</span>
+        <em>trava antes de: qualquer aluno real usar o app</em>
+      </div>
+      <div>
+        <b>Provedor de pagamento</b>
+        <span>O schema guarda só a referência externa, então trocar depois é barato.
+          Mas Pix mudaria o desenho da tela de cobrança bem mais que cartão.</span>
+        <em>trava antes de: construir a tela de cobrança</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== Ordem -->
+  <section>
+    <p class="tag">Sequência</p>
+    <h2>A ordem que faz sentido</h2>
+    <p class="intro">
+      Cada passo depende do anterior por um motivo técnico, não por gosto.
+    </p>
+
+    <div class="steps">
+      <div>
+        <span class="k">1</span>
+        <div><b>Ligar o Supabase</b><p>Aplicar as seis migrations e trocar a camada de dados enquanto ela ainda é pequena.</p></div>
+        <span class="why">quanto antes, menos retrabalho</span>
+      </div>
+      <div>
+        <span class="k">2</span>
+        <div><b>Entrada do aluno</b><p>Convite e primeiro acesso. Sem isso o produto não sai do modo demonstração.</p></div>
+        <span class="why">depende de auth real</span>
+      </div>
+      <div>
+        <span class="k">3</span>
+        <div><b>Offline no treino</b><p>Fila local e sincronização, na tela que mais precisa disso.</p></div>
+        <span class="why">depende do banco real</span>
+      </div>
+      <div>
+        <span class="k">4</span>
+        <div><b>Avaliação física</b><p>Peso, medidas e fotos. É o que dá sentido ao acompanhamento.</p></div>
+        <span class="why">precisa do Storage</span>
+      </div>
+      <div>
+        <span class="k">5</span>
+        <div><b>Nutrição</b><p>Plano alimentar e registro de refeição, fechando o papel do nutricionista.</p></div>
+        <span class="why">módulo independente</span>
+      </div>
+      <div>
+        <span class="k">6</span>
+        <div><b>Cobrança</b><p>Por último, quando já houver aluno de verdade para cobrar.</p></div>
+        <span class="why">depende de decisão de negócio</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== Você -->
+  <section>
+    <div class="ask">
+      <h2>O que eu preciso de você agora</h2>
+      <ol>
+        <li>Criar um projeto no Supabase em <code>supabase.com</code> — região São Paulo, e guardar a senha do banco.</li>
+        <li>Em <b>Account → Access Tokens</b>, gerar um token e me mandar aqui, junto com a referência do projeto (aquele código na URL do painel).</li>
+        <li>Pronto. Eu aplico as seis migrations, planto os dados de demonstração e troco a camada de dados.</li>
+      </ol>
+      <p class="fine">
+        O token é uma credencial: dá acesso à sua conta Supabase. Use-o só nesta conversa e
+        revogue na mesma tela quando a migração terminar — leva dez segundos e não quebra nada.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>
+    Documento de trabalho, não contrato. Cada decisão aqui está escrita no código como
+    migration ou teste — quando uma mudar, muda nos dois lugares.
+  </p>
+</footer>

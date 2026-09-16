@@ -1,0 +1,1013 @@
+<title>FitG Forja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500..800&family=Chivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&family=Syne:wght@500;700;800&family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Schibsted+Grotesk:wght@400;500;600;700&family=Kode+Mono:wght@400;500&display=swap">
+
+<style>
+/* ===========================================================================
+   FitG — direção "Forja"
+   Metal quente e ouro em brasa. Um app de treino é, no fundo, um caderno de
+   números: carga, repetição, tempo. Então os números é que são o desenho.
+   Mundo visual único (escuro por decisão, não por omissão).
+   ======================================================================== */
+
+:root {
+  --ground:    #14110E;
+  --ground-2:  #191510;
+  --metal:     #1F1A15;
+  --metal-2:   #292118;
+  --metal-3:   #352B1F;
+  --edge:      #3B3125;
+  --edge-soft: #2A2219;
+
+  --gold:      #E8A33D;
+  --gold-hot:  #F7D79B;
+  --gold-deep: #A96C1C;
+  --ember:     #C4552A;
+
+  --ink:       #F6F0E6;
+  --ink-2:     #B7A994;
+  --ink-3:     #7F7364;
+  --ink-4:     #5B5246;
+
+  --done:      #8FB26A;
+  --rest:      #6E9DBC;
+
+  /* Par escolhido — Fundição: grotesca contemporânea com eixo óptico, que
+     aperta as formas no corpo grande em vez de só engordar. */
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --text: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Kode Mono", ui-monospace, monospace;
+  --display-w: 800;
+  --display-ls: -.025em;
+  --display-lh: .86;
+  --title: 44px;
+  --title-lh: .9;
+  --title-xl: 62px;
+  --num-hero: 90px;
+  --glyph: 56px;
+  --clock: 50px;
+
+  --phone-w: 390px;
+}
+
+/* Par B — Ofício: geométrica extendida, forma estranha de propósito. */
+:root[data-type="b"] {
+  --display: "Syne", "Futura", ui-sans-serif, sans-serif;
+  --text: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Martian Mono", ui-monospace, monospace;
+  --display-w: 800;
+  --display-ls: -.03em;
+  --display-lh: .84;
+  --title: 40px;
+  --title-lh: .9;
+  --title-xl: 52px;
+  --num-hero: 80px;
+  --glyph: 50px;
+  --clock: 44px;
+}
+
+/* Par A — Ferraria: didone de alto contraste, cartaz de clube atlético. */
+:root[data-type="a"] {
+  --display: "Bodoni Moda", "Didot", "Times New Roman", serif;
+  --text: "Chivo", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", monospace;
+  --display-w: 700;
+  --display-ls: -.005em;
+  --display-lh: .88;
+  --title: 40px;
+  --title-lh: .98;
+  --title-xl: 54px;
+  --num-hero: 94px;
+  --glyph: 58px;
+  --clock: 48px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-inline: 20px;
+  padding-block: 0;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Calor ambiente: duas manchas radiais fixas, bem baixas de opacidade, e um
+   grão finíssimo por cima. É o que tira o "preto chapado" da tela. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60vw 48vw at 12% -8%, rgba(232,163,61,.16), transparent 62%),
+    radial-gradient(52vw 42vw at 96% 108%, rgba(196,85,42,.14), transparent 60%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='.34'/></svg>");
+}
+main, header, footer { position: relative; z-index: 2; }
+
+/* --------------------------------------------------------------------- Hero */
+
+.masthead {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-block: 72px 44px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.masthead h1 {
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-size: clamp(72px, 16vw, 200px);
+  line-height: var(--display-lh);
+  letter-spacing: var(--display-ls);
+  margin: 14px 0 0;
+  text-wrap: balance;
+  background: linear-gradient(168deg, var(--gold-hot) 4%, var(--gold) 38%, var(--gold-deep) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.masthead .sub {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 22px 40px;
+  max-width: 900px;
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--edge-soft);
+  color: var(--ink-2);
+  font-size: 15.5px;
+}
+.masthead .sub b {
+  display: block;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+/* --------------------------------------------------------------- Seletor */
+
+.typeswitch {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--edge-soft);
+}
+.typeswitch > p { margin: 0 0 14px; }
+.typeswitch .opts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  max-width: 900px;
+}
+.typeswitch button {
+  text-align: left;
+  border: 1px solid var(--edge-soft);
+  background: var(--metal);
+  color: var(--ink-2);
+  border-radius: 18px;
+  padding: 15px 17px 16px;
+  cursor: pointer;
+  transition: border-color .18s ease, background .18s ease;
+}
+.typeswitch button:hover { border-color: var(--edge); }
+.typeswitch button[aria-pressed="true"] {
+  border-color: rgba(232,163,61,.55);
+  background: linear-gradient(165deg, rgba(232,163,61,.13), rgba(232,163,61,.03));
+}
+.typeswitch .nm {
+  display: block;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.typeswitch .fx { display: block; font-size: 12px; margin-top: 9px; letter-spacing: .01em; }
+.typeswitch button[aria-pressed="true"] .fx { color: var(--gold); }
+.typeswitch .why { display: block; font-size: 13.5px; margin-top: 7px; line-height: 1.4; color: var(--ink-3); }
+
+/* Cada opção se apresenta na própria letra que oferece. */
+.opt-a .nm { font-family: "Bodoni Moda", Georgia, serif; font-weight: 700; }
+.opt-a .fx, .opt-a .why { font-family: "Chivo", system-ui, sans-serif; }
+.opt-a .fx { font-family: "Spline Sans Mono", monospace; }
+.opt-b .nm { font-family: "Syne", system-ui, sans-serif; font-weight: 800; letter-spacing: -.03em; }
+.opt-b .why { font-family: "Familjen Grotesk", system-ui, sans-serif; }
+.opt-b .fx { font-family: "Martian Mono", monospace; font-size: 11px; }
+.opt-c .nm { font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; letter-spacing: -.025em; }
+.opt-c .why { font-family: "Schibsted Grotesk", system-ui, sans-serif; }
+.opt-c .fx { font-family: "Kode Mono", monospace; }
+
+/* ------------------------------------------------------------------- Tira */
+
+.strip {
+  max-width: 1240px;
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 56px 44px;
+  padding-block: 20px 84px;
+  align-items: start;
+}
+
+figure.device { margin: 0; width: min(var(--phone-w), 100%); }
+
+figure.device figcaption {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--edge-soft);
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1.45;
+}
+figure.device figcaption b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+/* Bezel de metal escovado. */
+.phone {
+  position: relative;
+  border-radius: 46px;
+  padding: 9px;
+  background:
+    linear-gradient(145deg, #4a4034 0%, #221c16 26%, #0e0b08 52%, #2e271e 78%, #4a4034 100%);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.06) inset,
+    0 40px 80px -36px rgba(0,0,0,.9),
+    0 0 0 1px rgba(0,0,0,.6);
+}
+
+.screen {
+  position: relative;
+  border-radius: 38px;
+  overflow: hidden;
+  background: var(--ground-2);
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+
+/* Barra de status falsa — dá escala de telefone sem virar adereço. */
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px 2px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  letter-spacing: .04em;
+}
+.status .dots { display: flex; gap: 4px; align-items: center; }
+.status .dots i {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--ink-3); font-style: normal;
+}
+.status .dots i:last-child { width: 16px; border-radius: 2px; background: var(--ink-2); }
+
+.body { flex: 1; padding: 18px 22px 0; display: flex; flex-direction: column; gap: 22px; }
+.body.tight { gap: 16px; }
+
+/* ------------------------------------------------------- Tipos recorrentes */
+
+.label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.label.gold { color: var(--gold); }
+
+h2.screen-title.xl { font-size: var(--title-xl); }
+h2.screen-title {
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-size: var(--title);
+  line-height: var(--title-lh);
+  letter-spacing: var(--display-ls);
+  margin: 6px 0 0;
+  color: var(--ink);
+}
+
+.num { font-family: var(--display); font-weight: var(--display-w); font-variant-numeric: tabular-nums; letter-spacing: var(--display-ls); }
+.num.clock-big { font-size: var(--clock); line-height: .88; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------ Card herói */
+
+.hero {
+  position: relative;
+  border-radius: 30px 30px 34px 34px;
+  overflow: hidden;
+  background: linear-gradient(152deg, #F3BF63 0%, #E8A33D 30%, #C4552A 66%, #8A3417 100%);
+  color: #1A1008;
+  padding: 22px 22px 0;
+}
+.hero .hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.hero .k {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(26,16,8,.62);
+}
+.hero .big {
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-size: var(--num-hero);
+  line-height: .82;
+  letter-spacing: var(--display-ls);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.hero .big small { font-size: 26px; font-weight: 700; margin-left: 6px; letter-spacing: 0; }
+.hero .hero-note { margin-top: 10px; font-size: 14.5px; font-weight: 500; color: rgba(26,16,8,.74); max-width: 22ch; }
+.hero .wave { display: block; width: 100%; height: 46px; margin-top: 14px; }
+
+/* Anéis de esforço. */
+.rings { display: flex; gap: 14px; align-items: center; }
+.rings svg { flex: none; }
+.rings .legend { display: flex; flex-direction: column; gap: 9px; }
+.rings .legend div { display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+.rings .legend b { font-family: var(--display); font-weight: 700; font-size: 21px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rings .legend em { font-style: normal; width: 7px; height: 7px; border-radius: 50%; }
+
+/* ------------------------------------------------- Pauta (lista de dias) */
+
+.ledger { display: flex; flex-direction: column; }
+.ledger .row {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 2px;
+  border-top: 1px solid var(--edge-soft);
+  text-align: left;
+}
+.ledger .row:last-child { border-bottom: 1px solid var(--edge-soft); }
+.ledger .glyph {
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-size: var(--glyph);
+  line-height: .78;
+  color: var(--edge);
+  letter-spacing: var(--display-ls);
+}
+.ledger .row.hot .glyph { color: var(--gold); }
+.ledger .name { display: block; font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: -.005em; }
+.ledger .meta { display: block; font-family: var(--mono); font-size: 11.5px; white-space: nowrap; color: var(--ink-3); margin-top: 3px; }
+.ledger .tail { font-family: var(--mono); font-size: 12px; color: var(--ink-4); text-align: right; }
+.ledger .row.hot .tail { color: var(--gold); }
+
+/* --------------------------------------------------------------- Botões */
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(170deg, var(--gold-hot), var(--gold) 46%, var(--gold-deep));
+  color: #1A1008;
+  font-family: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  cursor: pointer;
+  box-shadow: 0 10px 26px -14px rgba(232,163,61,.9);
+}
+.cta.ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: none;
+  border: 1px solid var(--edge);
+}
+.cta:focus-visible, .set:focus-visible, .navpill a:focus-visible {
+  outline: 2px solid var(--gold-hot);
+  outline-offset: 3px;
+}
+
+.field {
+  width: 100%;
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid var(--edge-soft);
+  background: var(--metal);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 16px;
+  padding-inline: 18px;
+}
+.field::placeholder { color: var(--ink-4); }
+.field:focus-visible { outline: none; border-color: var(--gold); }
+
+/* ------------------------------------------------------------ Execução */
+
+.exercise { border-top: 1px solid var(--edge-soft); padding: 15px 2px 4px; }
+.exercise:first-of-type { border-top: 0; }
+.exercise header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.exercise h3 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.005em; color: var(--ink); }
+.exercise .presc { font-family: var(--mono); font-size: 12px; color: var(--gold); white-space: nowrap; }
+.exercise .prev { font-family: var(--mono); font-size: 11.5px; color: var(--ink-4); margin-top: 3px; }
+
+.sets { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+.set {
+  display: grid;
+  grid-template-columns: 26px 1fr 1fr 40px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px 9px 6px;
+  border: 1px solid var(--edge-soft);
+  border-radius: 13px;
+  background: var(--metal);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  cursor: pointer;
+  text-align: left;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.set .idx { color: var(--ink-4); text-align: center; }
+.set .v { color: var(--ink); font-variant-numeric: tabular-nums; }
+.set .v span { color: var(--ink-4); font-size: 11.5px; margin-left: 2px; }
+.set .tick {
+  justify-self: end;
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--edge);
+  display: grid; place-items: center;
+  color: transparent;
+}
+.set[aria-pressed="true"] {
+  background: linear-gradient(180deg, rgba(232,163,61,.16), rgba(232,163,61,.07));
+  border-color: rgba(232,163,61,.5);
+  color: var(--ink);
+}
+.set[aria-pressed="true"] .tick {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1A1008;
+}
+
+/* Barra de descanso — fica colada no rodapé da tela de execução. */
+.restbar {
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px 22px 0 0;
+  background: var(--metal-2);
+  border-top: 1px solid var(--edge);
+  padding: 15px 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.restbar .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 46%;
+  background: linear-gradient(90deg, rgba(196,85,42,.30) 0%, rgba(232,163,61,.16) 72%, rgba(232,163,61,0) 100%);
+  animation: drain 24s linear infinite;
+}
+@keyframes drain { from { width: 100%; } to { width: 0%; } }
+.restbar > *:not(.fill) { position: relative; z-index: 1; }
+.restbar .clock { font-family: var(--display); font-weight: var(--display-w); font-size: 38px; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
+.restbar .what { flex: 1; }
+.restbar .what b { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.restbar .what span { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+.restbar .skip {
+  border: 1px solid var(--edge);
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: 999px;
+  height: 38px;
+  padding-inline: 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------- Lista de alunos */
+
+.roster { display: flex; flex-direction: column; }
+.roster .r {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 13px;
+  align-items: center;
+  padding: 13px 2px;
+  border-top: 1px solid var(--edge-soft);
+}
+.roster .r:last-child { border-bottom: 1px solid var(--edge-soft); }
+.roster .av {
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  display: grid; place-items: center;
+  background: var(--metal-2);
+  border: 1px solid var(--edge-soft);
+  font-family: var(--display);
+  font-weight: var(--display-w);
+  font-size: 19px;
+  color: var(--ink-2);
+}
+.roster .nm { display: block; font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -.005em; }
+.roster .st { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+.bars { display: flex; gap: 3px; align-items: flex-end; height: 26px; }
+.bars i { width: 5px; border-radius: 2px; background: var(--metal-3); display: block; }
+.bars i.on { background: var(--gold); }
+.bars i.mid { background: var(--gold-deep); }
+
+/* -------------------------------------------------------------- Nav pílula */
+
+.navpill {
+  margin: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(31,26,21,.82);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid var(--edge-soft);
+  display: flex;
+  gap: 4px;
+}
+.navpill a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 46px;
+  border-radius: 999px;
+  color: var(--ink-3);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -.005em;
+}
+.navpill a[aria-current="page"] {
+  background: linear-gradient(170deg, var(--gold-hot), var(--gold) 55%, var(--gold-deep));
+  color: #1A1008;
+}
+.navpill svg { width: 18px; height: 18px; }
+
+/* --------------------------------------------------------------- Rodapé */
+
+.notes {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-block: 40px 90px;
+  border-top: 1px solid var(--edge-soft);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px 40px;
+}
+.notes h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+.notes p { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.6; }
+.notes code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  background: var(--metal);
+  border: 1px solid var(--edge-soft);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 460px) {
+  .masthead { padding-block: 44px 30px; }
+  .strip { gap: 44px 0; }
+  .screen { min-height: 760px; }
+}
+</style>
+
+<header class="masthead">
+  <p class="eyebrow">FitG · direção visual 02</p>
+  <h1>FORJA</h1>
+  <div class="sub">
+    <div><b>A ideia</b>Um app de treino é um caderno de números — carga, repetição, descanso. Aqui o número é o desenho: corpo grande, contraste alto, tabular.</div>
+    <div><b>O mundo</b>Metal quente e ouro em brasa. Carvão amarronzado no lugar do preto azulado, calor difuso e grão fino em vez de sombra.</div>
+    <div><b>A regra</b>Nem tudo é card. Os dias do treino são pauta com fio de 1px; a moldura fica só para o que precisa ser tocado.</div>
+  </div>
+
+  <section class="typeswitch" aria-labelledby="ts-t">
+    <p class="label gold" id="ts-t">Troque a tipografia e veja nas cinco telas</p>
+    <div class="opts">
+      <button type="button" class="opt-a" data-set="a" aria-pressed="false">
+        <span class="nm">Ferraria</span>
+        <span class="fx">Bodoni Moda · Chivo · Spline Mono</span>
+        <span class="why">Didone de alto contraste. Numeral que parece cartaz de clube atlético de 1900.</span>
+      </button>
+      <button type="button" class="opt-b" data-set="b" aria-pressed="false">
+        <span class="nm">Ofício</span>
+        <span class="fx">Syne · Familjen · Martian</span>
+        <span class="why">Geométrica extendida, formas deliberadamente estranhas. Cheiro de estúdio de design.</span>
+      </button>
+      <button type="button" class="opt-c" data-set="c" aria-pressed="true">
+        <span class="nm">Fundição</span>
+        <span class="fx">Bricolage · Schibsted · Kode</span>
+        <span class="why">Escolhida. Grotesca contemporânea com eixo óptico — moderna sem ser a de sempre.</span>
+      </button>
+    </div>
+  </section>
+</header>
+
+<main class="strip">
+
+  <!-- ===================================================== 01 · Entrada -->
+  <figure class="device">
+    <div class="phone"><div class="screen">
+      <div class="status"><span class="mono">9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="body">
+        <div style="padding-top:38px">
+          <p class="label gold">Studio Guerra</p>
+          <h2 class="screen-title xl" style="margin-top:10px">BOM<br>TREINO.</h2>
+          <p style="color:var(--ink-2);font-size:15.5px;margin:14px 0 0;max-width:26ch">
+            Entra que o plano de hoje já está montado.
+          </p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+          <input class="field" id="f-email" type="email" placeholder="E-mail" value="ana@exemplo.com">
+          <input class="field" id="f-senha" type="password" placeholder="Senha" value="demo1234">
+          <button class="cta" type="button" style="margin-top:6px">Entrar</button>
+        </div>
+
+        <div style="border-top:1px solid var(--edge-soft);padding-top:16px">
+          <p class="label">Entrar como</p>
+          <div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap">
+            <span class="mono" style="font-size:12px;color:var(--gold);border:1px solid rgba(232,163,61,.4);border-radius:999px;padding:7px 13px">aluno</span>
+            <span class="mono" style="font-size:12px;color:var(--ink-3);border:1px solid var(--edge-soft);border-radius:999px;padding:7px 13px">personal</span>
+            <span class="mono" style="font-size:12px;color:var(--ink-3);border:1px solid var(--edge-soft);border-radius:999px;padding:7px 13px">nutri</span>
+          </div>
+        </div>
+
+        <p class="mono" style="margin-top:auto;padding-bottom:26px;font-size:11px;color:var(--ink-4)">
+          FITG · 2026
+        </p>
+      </div>
+    </div></div>
+    <figcaption><b>01 · Entrada</b>O nome da marca vem antes do formulário. Os três papéis aparecem como pílulas: quem é personal sabe na primeira olhada que o app é dele também.</figcaption>
+  </figure>
+
+  <!-- ======================================================== 02 · Hoje -->
+  <figure class="device">
+    <div class="phone"><div class="screen">
+      <div class="status"><span class="mono">9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="body tight">
+        <div>
+          <p class="label">Quarta-feira, 16 de setembro</p>
+          <h2 class="screen-title">OLÁ,<br>ANA</h2>
+        </div>
+
+        <section class="hero">
+          <div class="hero-top">
+            <div>
+              <p class="k">Treino de hoje · dia C</p>
+              <p class="big">06<small>exercícios</small></p>
+            </div>
+            <span class="mono" style="font-size:11px;background:rgba(26,16,8,.16);border-radius:999px;padding:6px 11px;color:#2A1A0C;white-space:nowrap">≈ 52 min</span>
+          </div>
+          <p class="hero-note">Pernas e ombro. Agachamento abre, panturrilha fecha.</p>
+          <svg class="wave" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 26 C 58 4, 108 46, 170 30 C 232 14, 286 42, 330 30 C 356 23, 374 14, 390 8 L390 46 L0 46 Z" fill="#191510"></path>
+          </svg>
+        </section>
+
+        <div class="rings">
+          <svg width="112" height="112" viewBox="0 0 112 112" role="img" aria-label="Três anéis de progresso da semana">
+            <circle cx="56" cy="56" r="48" fill="none" stroke="#2A2219" stroke-width="10"></circle>
+            <circle cx="56" cy="56" r="48" fill="none" stroke="#E8A33D" stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="301.6" stroke-dashoffset="90" transform="rotate(-90 56 56)"></circle>
+            <circle cx="56" cy="56" r="35" fill="none" stroke="#2A2219" stroke-width="10"></circle>
+            <circle cx="56" cy="56" r="35" fill="none" stroke="#C4552A" stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="219.9" stroke-dashoffset="44" transform="rotate(-90 56 56)"></circle>
+            <circle cx="56" cy="56" r="22" fill="none" stroke="#2A2219" stroke-width="10"></circle>
+            <circle cx="56" cy="56" r="22" fill="none" stroke="#8FB26A" stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="138.2" stroke-dashoffset="83" transform="rotate(-90 56 56)"></circle>
+          </svg>
+          <div class="legend">
+            <div><em style="background:#E8A33D"></em><b>3</b> de 4 treinos</div>
+            <div><em style="background:#C4552A"></em><b>8.240</b> kg movidos</div>
+            <div><em style="background:#8FB26A"></em><b>2</b> de 5 refeições</div>
+          </div>
+        </div>
+
+        <div>
+          <p class="label">Sua equipe</p>
+          <div class="roster" style="margin-top:9px">
+            <div class="r">
+              <span class="av">I</span>
+              <span><span class="nm">Igor Guerra</span><span class="st">personal · montou o plano em 01/09</span></span>
+              <span class="mono" style="font-size:11px;color:var(--ink-4)">→</span>
+            </div>
+            <div class="r">
+              <span class="av">R</span>
+              <span><span class="nm">Rafael Lima</span><span class="st">nutricionista · plano de 2.100 kcal</span></span>
+              <span class="mono" style="font-size:11px;color:var(--ink-4)">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="navpill" aria-label="Navegação do aluno">
+        <a href="#" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5"></path></svg>Hoje</a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6M7 6v12M17 6v12M7 12h10"></path></svg>Treino</a>
+        <a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c0 9-5.5 14-11 14a6 6 0 0 1 0-12c4 0 6-2 11-2Z"></path><path d="M4 21c2.5-5 6-8.5 10.5-11"></path></svg>Dieta</a>
+      </nav>
+    </div></div>
+    <figcaption><b>02 · Hoje</b>O card herói termina em onda, não em canto arredondado — a borda é desenho, não caixa. Os anéis somam treino, carga movida e refeições no mesmo gesto.</figcaption>
+  </figure>
+
+  <!-- ======================================================= 03 · Plano -->
+  <figure class="device">
+    <div class="phone"><div class="screen">
+      <div class="status"><span class="mono">9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="body">
+        <div>
+          <p class="label gold">Plano ativo · desde 01/09</p>
+          <h2 class="screen-title">HIPER-<br>TROFIA</h2>
+          <p class="mono" style="font-size:12px;color:var(--ink-3);margin-top:10px">3× por semana · ganho de massa magra</p>
+        </div>
+
+        <div class="ledger">
+          <div class="row">
+            <span class="glyph">A</span>
+            <span><span class="name">Peito e tríceps</span><span class="meta">5 exercícios · 16 séries</span></span>
+            <span class="tail">feito 4×<br>há 3 dias</span>
+          </div>
+          <div class="row">
+            <span class="glyph">B</span>
+            <span><span class="name">Costas e bíceps</span><span class="meta">5 exercícios · 17 séries</span></span>
+            <span class="tail">feito 3×<br>há 2 dias</span>
+          </div>
+          <div class="row hot">
+            <span class="glyph">C</span>
+            <span><span class="name">Pernas e ombro</span><span class="meta">6 exercícios · 21 séries</span></span>
+            <span class="tail">hoje</span>
+          </div>
+        </div>
+
+        <button class="cta" type="button">
+          Começar dia C
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+        </button>
+
+        <div>
+          <p class="label">Últimos treinos</p>
+          <div class="ledger" style="margin-top:9px">
+            <div class="row" style="grid-template-columns:1fr auto">
+              <span><span class="name" style="font-size:15px">B · Costas e bíceps</span><span class="meta">14 set, 19:05</span></span>
+              <span class="tail">48 min</span>
+            </div>
+            <div class="row" style="grid-template-columns:1fr auto">
+              <span><span class="name" style="font-size:15px">A · Peito e tríceps</span><span class="meta">13 set, 07:20</span></span>
+              <span class="tail">51 min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="navpill" aria-label="Navegação do aluno">
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5"></path></svg>Hoje</a>
+        <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6M7 6v12M17 6v12M7 12h10"></path></svg>Treino</a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c0 9-5.5 14-11 14a6 6 0 0 1 0-12c4 0 6-2 11-2Z"></path><path d="M4 21c2.5-5 6-8.5 10.5-11"></path></svg>Dieta</a>
+      </nav>
+    </div></div>
+    <figcaption><b>03 · Plano</b>A letra do dia em corpo 54 faz o trabalho que um card faria, sem a caixa. O dia de hoje acende em ouro; os outros ficam em metal frio.</figcaption>
+  </figure>
+
+  <!-- ==================================================== 04 · Execução -->
+  <figure class="device">
+    <div class="phone"><div class="screen">
+      <div class="status"><span class="mono">9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="body tight" style="padding-bottom:0">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div>
+            <p class="label gold">Dia C · pernas e ombro</p>
+            <p class="num clock-big" style="margin:6px 0 0">32:14</p>
+          </div>
+          <button class="cta ghost" type="button" style="width:auto;height:40px;padding-inline:18px;font-size:14px">Encerrar</button>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span class="label">Progresso</span>
+            <span class="mono" style="font-size:12px;color:var(--gold)">9 / 21 séries</span>
+          </div>
+          <div style="height:5px;border-radius:99px;background:var(--metal-2);margin-top:8px;overflow:hidden">
+            <div style="width:43%;height:100%;background:linear-gradient(90deg,var(--ember),var(--gold))"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="exercise">
+            <header>
+              <h3>Agachamento livre</h3>
+              <span class="presc">4×8-10 · 45kg</span>
+            </header>
+            <p class="prev">da última vez · 42,5 kg × 10, 10, 9, 8</p>
+            <div class="sets">
+              <button class="set" type="button" aria-pressed="true"><span class="idx">1</span><span class="v">45<span>kg</span></span><span class="v">10<span>reps</span></span><span class="tick"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span></button>
+              <button class="set" type="button" aria-pressed="true"><span class="idx">2</span><span class="v">45<span>kg</span></span><span class="v">10<span>reps</span></span><span class="tick"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span></button>
+              <button class="set" type="button" aria-pressed="true"><span class="idx">3</span><span class="v">47,5<span>kg</span></span><span class="v">9<span>reps</span></span><span class="tick"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span></button>
+              <button class="set" type="button" aria-pressed="false"><span class="idx">4</span><span class="v">47,5<span>kg</span></span><span class="v">8<span>reps</span></span><span class="tick"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span></button>
+            </div>
+          </div>
+
+          <div class="exercise" style="margin-top:14px">
+            <header>
+              <h3>Leg press 45°</h3>
+              <span class="presc">4×12 · 120kg</span>
+            </header>
+            <p class="prev">da última vez · 115 kg × 12, 12, 12, 11</p>
+            <div class="sets">
+              <button class="set" type="button" aria-pressed="false"><span class="idx">1</span><span class="v">120<span>kg</span></span><span class="v">12<span>reps</span></span><span class="tick"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"></path></svg></span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="restbar">
+          <span class="fill" aria-hidden="true"></span>
+          <span class="clock" id="rest-clock">01:07</span>
+          <span class="what"><b>Descanso</b><span>próxima: agachamento · série 4</span></span>
+          <button class="skip" type="button">pular</button>
+        </div>
+      </div>
+    </div></div>
+    <figcaption><b>04 · Execução</b>Cada série é um botão do tamanho do polegar: toca e está registrada. O descanso não é um pop-up — é uma barra que drena no rodapé enquanto você continua vendo o treino.</figcaption>
+  </figure>
+
+  <!-- ====================================================== 05 · Painel -->
+  <figure class="device">
+    <div class="phone"><div class="screen">
+      <div class="status"><span class="mono">9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="body">
+        <div>
+          <p class="label gold">Studio Guerra · personal</p>
+          <h2 class="screen-title">SEUS<br>ALUNOS</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="border:1px solid var(--edge-soft);border-radius:18px;padding:14px 15px;background:var(--metal)">
+            <p class="label" style="font-size:10px">Ativos</p>
+            <p class="num" style="font-size:38px;line-height:1;margin:4px 0 0">12</p>
+          </div>
+          <div style="border:1px solid rgba(232,163,61,.34);border-radius:18px;padding:14px 15px;background:linear-gradient(165deg,rgba(232,163,61,.14),rgba(232,163,61,.04))">
+            <p class="label gold" style="font-size:10px">Treinaram hoje</p>
+            <p class="num" style="font-size:38px;line-height:1;margin:4px 0 0;color:var(--gold)">7</p>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span class="label">Semana</span>
+            <span class="mono" style="font-size:11px;color:var(--ink-4)">frequência 7 dias</span>
+          </div>
+          <div class="roster" style="margin-top:9px">
+            <div class="r">
+              <span class="av">AC</span>
+              <span><span class="nm">Ana Carolina</span><span class="st">dia C hoje · 32 min atrás</span></span>
+              <span class="bars"><i class="on" style="height:16px"></i><i class="on" style="height:22px"></i><i class="mid" style="height:11px"></i><i class="on" style="height:26px"></i><i style="height:6px"></i><i class="on" style="height:19px"></i><i class="on" style="height:24px"></i></span>
+            </div>
+            <div class="r">
+              <span class="av">BT</span>
+              <span><span class="nm">Bruno Teixeira</span><span class="st">full body A · há 2 dias</span></span>
+              <span class="bars"><i class="on" style="height:14px"></i><i style="height:6px"></i><i class="mid" style="height:10px"></i><i style="height:6px"></i><i class="on" style="height:18px"></i><i style="height:6px"></i><i style="height:6px"></i></span>
+            </div>
+            <div class="r">
+              <span class="av">CM</span>
+              <span><span class="nm">Carla Menezes</span><span class="st">sem treino há 9 dias</span></span>
+              <span class="bars"><i style="height:6px"></i><i style="height:6px"></i><i style="height:6px"></i><i style="height:6px"></i><i style="height:6px"></i><i style="height:6px"></i><i style="height:6px"></i></span>
+            </div>
+            <div class="r">
+              <span class="av">DL</span>
+              <span><span class="nm">Diego Lacerda</span><span class="st">dia B · há 5 horas</span></span>
+              <span class="bars"><i class="on" style="height:20px"></i><i class="on" style="height:15px"></i><i class="on" style="height:26px"></i><i class="mid" style="height:12px"></i><i class="on" style="height:22px"></i><i style="height:6px"></i><i class="on" style="height:17px"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="navpill" aria-label="Navegação do personal">
+        <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M2.8 20c0-3.2 2.8-5.2 6.2-5.2s6.2 2 6.2 5.2"></path><path d="M16.5 5.6a3.2 3.2 0 0 1 0 6.3M17.4 14.9c2.2.5 3.8 2.3 3.8 5.1"></path></svg>Alunos</a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6M7 6v12M17 6v12M7 12h10"></path></svg>Planos</a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20.5c0-3.7 3.3-6 7.5-6s7.5 2.3 7.5 6"></path></svg>Perfil</a>
+      </nav>
+    </div></div>
+    <figcaption><b>05 · Painel do personal</b>O mesmo mundo visual, densidade outra. As barrinhas de frequência dizem quem sumiu antes de qualquer número: Carla está apagada há nove dias.</figcaption>
+  </figure>
+
+</main>
+
+<footer class="notes">
+  <div>
+    <h3>Paleta</h3>
+    <p>Chão <code>#14110E</code>, metal <code>#1F1A15</code>, ouro <code>#E8A33D</code>, ember <code>#C4552A</code>, tinta <code>#F5EFE6</code>. O cinza puxa para o marrom de propósito: cinza neutro fica com cara de template.</p>
+  </div>
+  <div>
+    <h3>Tipografia</h3>
+    <p data-note="a" hidden>Bodoni Moda nos números e títulos: contraste alto, serifa fina, corpo 94 no herói. Chivo — grotesca de sinalização — no texto, e Spline Sans Mono em rótulo, carga e cronômetro.</p>
+    <p data-note="b" hidden>Syne nos títulos: extendida, geométrica, com formas que não se confundem com nenhuma grotesca de sistema. Familjen Grotesk no texto e Martian Mono nos dados.</p>
+    <p data-note="c">Bricolage Grotesque nos títulos, com eixo óptico que aperta as formas no corpo grande. Schibsted Grotesk no texto e Kode Mono nos dados.</p>
+  </div>
+  <div>
+    <h3>O que muda no código</h3>
+    <p>Só a camada de aparência: tokens, tipografia e três componentes (herói, pauta, série). O modelo de dados, os papéis e as políticas de RLS que já estão de pé continuam iguais.</p>
+  </div>
+</footer>
+
+<script>
+  // Troca de tipografia: reescreve os tokens na raiz, nada mais. As cinco telas
+  // respondem juntas porque nenhuma delas declara uma família por conta própria.
+  const opts = [...document.querySelectorAll(".typeswitch button")];
+  const notes = [...document.querySelectorAll("[data-note]")];
+
+  function applyType(key) {
+    if (key === "c") document.documentElement.removeAttribute("data-type");
+    else document.documentElement.setAttribute("data-type", key);
+    for (const b of opts) b.setAttribute("aria-pressed", String(b.dataset.set === key));
+    for (const n of notes) n.hidden = n.dataset.note !== key;
+    try { localStorage.setItem("fitg-type", key); } catch { /* modo privado */ }
+  }
+
+  for (const b of opts) b.addEventListener("click", () => applyType(b.dataset.set));
+
+  try {
+    const saved = localStorage.getItem("fitg-type");
+    if (saved === "a" || saved === "b") applyType(saved);
+  } catch { /* storage indisponível: fica no par escolhido */ }
+  // As séries são o único elemento realmente interativo desta amostra:
+  // tocar registra, tocar de novo desfaz. É o gesto que decide o app.
+  for (const set of document.querySelectorAll(".set")) {
+    set.addEventListener("click", () => {
+      set.setAttribute("aria-pressed", set.getAttribute("aria-pressed") === "true" ? "false" : "true");
+    });
+  }
+
+  // Cronômetro de descanso, acompanhando a barra que drena.
+  const clock = document.getElementById("rest-clock");
+  if (clock && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let left = 67;
+    setInterval(() => {
+      left = left > 0 ? left - 1 : 90;
+      clock.textContent =
+        String(Math.floor(left / 60)).padStart(2, "0") + ":" + String(left % 60).padStart(2, "0");
+    }, 1000);
+  }
+</script>

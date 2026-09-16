@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* =============================================================================
+   FitG — direção "Forja"
+   Metal quente e ouro em brasa. Um app de treino é um caderno de números:
+   carga, repetição, tempo. Então o número é o desenho.
+
+   Mundo visual único, escuro por decisão. Sem tema claro: a app vive na
+   academia, quase sempre de noite, com a mão suada e o telefone no chão.
+   ========================================================================== */
+
+@theme {
+  /* Superfícies — o cinza puxa para o marrom de propósito. Cinza neutro é o
+     que dá cara de template. */
+  --color-ground:    #14110E;
+  --color-ground-2:  #191510;
+  --color-metal:     #1F1A15;
+  --color-metal-2:   #292118;
+  --color-metal-3:   #352B1F;
+  --color-edge:      #3B3125;
+  --color-edge-soft: #2A2219;
+
+  /* Calor — acento do tenant sobrescreve --color-gold em runtime. */
+  --color-gold:      #E8A33D;
+  --color-gold-hot:  #F7D79B;
+  --color-gold-deep: #A96C1C;
+  --color-gold-ink:  #1A1008;
+  --color-ember:     #C4552A;
+
+  /* Tinta quente, nunca branco puro. */
+  --color-ink:       #F6F0E6;
+  --color-ink-2:     #B7A994;
+  --color-ink-3:     #7F7364;
+  --color-ink-4:     #5B5246;
+
+  /* Semânticos — separados do acento de propósito. */
+  --color-positive:  #8FB26A;
+  --color-info:      #6E9DBC;
+  --color-danger:    #D4563C;
+
+  /* Anéis: treino, carga movida, refeições. */
+  --color-ring-train: #E8A33D;
+  --color-ring-load:  #C4552A;
+  --color-ring-meal:  #8FB26A;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-kode), ui-monospace, monospace;
+
+  --radius-card: 1.25rem;
+  --radius-tile: 1rem;
+  --radius-pill: 999px;
+}
+
+@layer base {
+  :root { color-scheme: dark; }
+
+  html { -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  /* Calor ambiente e grão: é o que tira o "preto chapado" da tela.
+     Ficam fixos e atrás de tudo, sem custo de layout. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(70vw 50vw at 10% -10%, color-mix(in srgb, var(--color-gold) 14%, transparent), transparent 62%),
+      radial-gradient(60vw 45vw at 96% 106%, color-mix(in srgb, var(--color-ember) 13%, transparent), transparent 60%);
+  }
+  body > * { position: relative; z-index: 1; }
+
+  .safe-top    { padding-top: max(env(safe-area-inset-top), 0.5rem); }
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+
+  ::selection { background: var(--color-gold); color: var(--color-gold-ink); }
+}
+
+@layer utilities {
+  /* Título/numeral. O eixo óptico da Bricolage aperta as formas no corpo
+     grande, então o display nunca é só "o mesmo tipo mais gordo". */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 48;
+  }
+  .display-xl { font-variation-settings: "opsz" 96; }
+
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* Rótulo técnico: mono, caixa alta, entreletra aberta. */
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* Ouro em brasa: o único gradiente da interface. Usado no que é ação. */
+  .molten {
+    background-image: linear-gradient(170deg, var(--color-gold-hot), var(--color-gold) 55%, var(--color-gold-deep));
+    color: var(--color-gold-ink);
+  }
+
+  /* Herói: o mesmo calor, mas com brasa no fim — mais fundo que um botão. */
+  .molten-hero {
+    background-image: linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--color-gold) 62%, #FFF4DC) 0%,
+      var(--color-gold) 30%,
+      var(--color-ember) 68%,
+      color-mix(in srgb, var(--color-ember) 70%, #3A1206) 100%
+    );
+    color: var(--color-gold-ink);
+  }
+
+  .hairline { box-shadow: inset 0 0 0 1px var(--color-edge-soft); }
+
+  .glass {
+    background: color-mix(in srgb, var(--color-metal) 84%, transparent);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
